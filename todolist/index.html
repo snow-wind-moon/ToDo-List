@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>我的TODOList</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <link rel="stylesheet" href="http://g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+    <link rel="stylesheet" href="./css/index.css">
+  </head>
+  <body>
+    <div id="app">
+        <div class="page-group">
+            <div class="page page-current">
+                
+                <Tab></Tab>
+
+                <Container
+                    :todos = "newTodos"
+                    @change_flag = "changeFlag"
+                    @check = "check"
+                    @add_item = "addItem"
+                ></Container>
+
+                <my-mask :remove = "remove" :active_index = "active_index" v-if = "mask_flag" :close_mask = "closeMask"></my-mask>
+
+                <tab-bar :type = "type" @get_type = "changeType"></tab-bar>
+            </div>
+        </div>
+    </div>
+
+    <template id="tab">
+        <header class="bar bar-nav">
+            <a class="icon icon-left pull-left"></a>
+            <i class="icon icon-edit pull-right" @click = "change_input_flag"></i>
+            <h1 class="title"> snow </h1>
+        </header>
+    </template>
+
+    <template id="container">
+        <div class="content">
+            <input type="text" v-if = "input_flag" @keyup.enter = "add">
+            <div class="card"
+                v-for = "(todo,index) in todos"
+                :key = "todo.id"
+            >
+                <div class="card-content">
+                    <div class="card-content-inner">
+                        <p> {{ todo.task }} </p>
+                        <div class="btn-box pull-right">
+                            <button class= 'button button-success'
+                                :class = "{ 'button-fill' : todo.done }"
+                                @click = "changeContainerFlag( index )"
+                            >
+                                <i class="icon icon-check"></i>
+                            </button>
+                            <button class="button button-danger"
+                                @click = "checkDone( index )"
+                            >
+                                <i class="icon icon-remove"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="mask">
+        <div class="mask-box">
+            <div class="bg" @click.self = "close_mask"></div>
+            <div class="mask-content">
+                <p> 您确定要删除吗？ </p>
+                <button class="button button-primary button-fill pull-right" @click.self = "confirm"> 确定 </button>
+            </div>
+        </div>
+    </template>
+
+    <template id="tabbar">
+        <footer>
+            <ul>
+                <li class="circle"
+                    v-for = "tabbar in tabbars"
+                    :key = "tabbar.id"
+                    :class = "[ tabbar.class,type == tabbar.text && 'circle-fill']"
+                    @click = "changeType( tabbar.text )"
+                >
+                    {{ tabbar.text }}
+                </li>
+            </ul>
+        </footer>
+    </template>
+  </body>
+  <script src="./js/vue.js"></script>
+  <script src="./js/index.js"></script>
+</html>
